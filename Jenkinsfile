@@ -25,7 +25,14 @@ pipeline {
         stage('Test') {
             steps{
                 sh '''
-                    -f "./index.html"
+                    echo "Check index.html"
+                    if [ -f "${WORKSPACE}/index.html" ]; then
+                        echo "Datei existiert."
+                    else
+                        echo "Datei existiert nicht."
+                        currentBuild.result = 'UNSTABLE'
+                    fi
+                    echo "npm test"
                     npm test
                 '''
             }
