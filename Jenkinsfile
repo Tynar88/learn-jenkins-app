@@ -24,8 +24,10 @@ pipeline {
         }
         stage('Test') {
             steps{
-                -f "./index.html"
-                npm test
+                sh '''
+                    -f "./index.html"
+                    npm test
+                '''
             }
 
         }
