@@ -28,41 +28,43 @@ pipeline {
 
             }
         }
-        stage('Unit Test') {
-            agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true
+        stage('Run Tests') {
+            parallel{
+                stage('Unit Test') {
+                    agent {
+                        docker {
+                            image 'node:18-alpine'
+                            reuseNode true
+                        }
+                    }
+                    steps{
+                        sh '''
+                            #test -f "${WORKSPACE}/build/index.html" ]
+                            npm test
+                        '''
+                    }
+
+                }
+                stage('E2E Test') {
+                    agent {
+                        docker {
+                            // image see playwright documentation
+                            image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                            reuseNode true
+                            //args '-u root:root' --> should not be done
+                        }
+                    }
+                    steps{
+                        sh '''
+                            npm install serve
+                            node_modules/.bin/serve -s build &
+                            sleep 10 #wait until server is running
+                            npx playwright test --reporter=html
+                        '''
+                    }
                 }
             }
-            steps{
-                sh '''
-                    #test -f "${WORKSPACE}/build/index.html" ]
-                    npm test
-                '''
-            }
-
         }
-        stage('E2E Test') {
-            agent {
-                docker {
-                    // image see playwright documentation
-                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-                    reuseNode true
-                    //args '-u root:root' --> should not be done
-                }
-            }
-            steps{
-                sh '''
-                    npm install serve
-                    node_modules/.bin/serve -s build &
-                    sleep 10 #wait until server is running
-                    npx playwright test --reporter=html
-                '''
-            }
-
-        }
-    
     }
 
     post {
