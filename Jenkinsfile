@@ -2,6 +2,11 @@ pipeline {
     agent any
 
     stages {
+        // this is a comment
+        /*
+        block comment
+        multiple lines
+        */
         stage('Build') {
             agent {
                 docker {
@@ -12,6 +17,7 @@ pipeline {
 
             steps {
                 sh '''
+                    # this is a comment in shell script
                     ls -la #list workspace
                     node --version
                     npm --version
