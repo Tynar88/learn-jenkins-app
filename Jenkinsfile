@@ -37,14 +37,25 @@ pipeline {
             }
             steps{
                 sh '''
-                    echo "Check index.html"
-                    if [ -f "${WORKSPACE}/build/index.html" ]; then
-                        echo "Datei existiert."
-                    else
-                        echo "Datei existiert nicht."
-                    fi
-                    echo "npm test"
+                    #test -f "${WORKSPACE}/build/index.html" ]
                     npm test
+                '''
+            }
+
+        }
+        stage('E2E') {
+            agent {
+                docker {
+                    // image see playwright documentation
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    reuseNode true
+                }
+            }
+            steps{
+                sh '''
+                    npm install -g serve
+                    serve -s build
+                    npx playwright test
                 '''
             }
 
