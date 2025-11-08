@@ -28,7 +28,7 @@ pipeline {
 
             }
         }
-        stage('Test') {
+        stage('Unit Test') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -43,7 +43,7 @@ pipeline {
             }
 
         }
-        stage('E2E') {
+        stage('E2E Test') {
             agent {
                 docker {
                     // image see playwright documentation
@@ -67,7 +67,7 @@ pipeline {
 
     post {
         always{
-            junit 'test-results/junit.xml'
+            junit 'jest-results/junit.xml'
         }
     }
 }
