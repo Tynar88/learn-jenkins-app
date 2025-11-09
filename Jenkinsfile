@@ -3,6 +3,7 @@ pipeline {
     environment{
         NETLIFY_SITE_ID = '37fd3fe5-0b4a-4e15-8b88-d82a480236e7'
         NETLIFY_AUTH_TOKEN = credentials('Netlify-token')
+        REACT_APP_VERSION = '1.2.3'
     }
 
     stages {
@@ -82,7 +83,6 @@ pipeline {
                 }
             }
         }
-
         stage('Staging') {
             agent {
                 docker {
@@ -108,13 +108,6 @@ pipeline {
                 always{
                     //junit 'jest-results/junit.xml'
                     publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Staging E2E', reportTitles: '', useWrapperFileDirectly: true])
-                }
-            }
-        }
-        stage('Approval') {
-            steps {
-                timeout(time: 20, unit: 'SECONDS') {
-                    input message: 'Ready to deploy?', ok: 'Yes, I am sure I want to deploy!'
                 }
             }
         }
