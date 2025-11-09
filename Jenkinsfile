@@ -21,6 +21,7 @@ pipeline {
 
             steps {
                 sh '''
+                    echo 'SMall change'
                     # this is a comment in shell script
                     ls -la #list workspace
                     node --version
