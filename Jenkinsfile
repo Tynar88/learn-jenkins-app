@@ -22,7 +22,6 @@ pipeline {
 
             steps {
                 sh '''
-                    echo 'SMall change'
                     # this is a comment in shell script
                     ls -la #list workspace
                     node --version
@@ -101,6 +100,7 @@ pipeline {
                     node_modules/.bin/netlify status
                     node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
                     CI_ENVIRONMENT_URL=$(node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json)
+                    sleep 2 #wait until server is running
                     npx playwright test --reporter=html
                 '''
             }
