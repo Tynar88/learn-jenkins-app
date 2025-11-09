@@ -76,7 +76,7 @@ pipeline {
                     post {
                         always{
                             //junit 'jest-results/junit.xml'
-                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright HTML report', reportTitles: '', useWrapperFileDirectly: true])
+                            publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright Local', reportTitles: '', useWrapperFileDirectly: true])
                         }
                     }
                 }
@@ -101,6 +101,30 @@ pipeline {
 
                     '''
 
+            }
+        }
+        stage('Prod E2E') {
+            agent {
+                docker {
+                    // image see playwright documentation
+                    image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+                    reuseNode true
+                    //args '-u root:root' --> should not be done
+                }
+            }
+            environment{
+                CI_ENVIRONMENT_URL = 'https://wondrous-otter-99403b.netlify.app'
+            }
+            steps{
+                sh '''
+                    npx playwright test --reporter=html
+                '''
+            }
+            post {
+                always{
+                    //junit 'jest-results/junit.xml'
+                    publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, icon: '', keepAll: false, reportDir: 'playwright-report', reportFiles: 'index.html', reportName: 'Playwright E2E', reportTitles: '', useWrapperFileDirectly: true])
+                }
             }
         }
     }
