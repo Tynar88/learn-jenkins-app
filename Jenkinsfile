@@ -41,7 +41,7 @@ pipeline {
 
             }
         }
-        stage('Run Tests') {
+        stage('Tests') {
             parallel{
                 stage('Unit Test') {
                     agent {
@@ -90,7 +90,7 @@ pipeline {
                 }
             }
         }
-        stage('Staging') {
+        stage('Deploy staging') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
@@ -106,8 +106,7 @@ pipeline {
                     node_modules/.bin/netlify --version
                     echo "Deploying to staging. Site-ID $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
-                    node_modules/.bin/
-                    ploy --dir=build --json > deploy-output.json
+                    node_modules/.bin/deploy --dir=build --json > deploy-output.json
                     CI_ENVIRONMENT_URL=$(node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json)
                     sleep 2 #wait until server is running
                     npx playwright test --reporter=html
@@ -121,7 +120,7 @@ pipeline {
             }
         }
         
-        stage('Prod') {
+        stage('Deploy Prod') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
