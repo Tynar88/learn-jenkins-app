@@ -7,18 +7,6 @@ pipeline {
     }
 
     stages {
-        // this is a comment
-        /*
-        block comment
-        multiple lines
-        */
-        stage('Docker') {
-            steps{
-                sh 'docker build -t my-playwright .'
-            }
-
-        }
-
 
         stage('Build') {
             agent {
