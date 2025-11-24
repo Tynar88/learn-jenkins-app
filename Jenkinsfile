@@ -12,6 +12,14 @@ pipeline {
         block comment
         multiple lines
         */
+        stage('Docker') {
+            steps{
+                sh 'docker build -t my-playwright .'
+            }
+
+        }
+
+
         stage('Build') {
             agent {
                 docker {
@@ -98,7 +106,8 @@ pipeline {
                     node_modules/.bin/netlify --version
                     echo "Deploying to staging. Site-ID $NETLIFY_SITE_ID"
                     node_modules/.bin/netlify status
-                    node_modules/.bin/netlify deploy --dir=build --json > deploy-output.json
+                    node_modules/.bin/
+                    ploy --dir=build --json > deploy-output.json
                     CI_ENVIRONMENT_URL=$(node_modules/.bin/node-jq -r '.deploy_url' deploy-output.json)
                     sleep 2 #wait until server is running
                     npx playwright test --reporter=html
