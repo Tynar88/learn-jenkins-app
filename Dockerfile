@@ -2,6 +2,5 @@ FROM mcr.microsoft.com/playwright:v1.39.0-jammy
 RUN npm install -g netlify-cli@20.1.1 serve
 RUN apt update
 RUN apt install jq -y
-RUN pip --version
-RUN pip3 --version
-RUN pip3 install numpy
+RUN apt install python3-pip
+RUN pip install numpy
