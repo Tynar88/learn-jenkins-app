@@ -116,7 +116,7 @@ pipeline {
             }
             steps{
                 sh '''
-                    python --version
+                    python3 --version
                     node --version
                     netlify --version
                     echo "Deploying to production. Site-ID $NETLIFY_SITE_ID"
