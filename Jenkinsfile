@@ -85,6 +85,9 @@ pipeline {
             environment{
                 CI_ENVIRONMENT_URL = 'STAGING_URL_TO_BE_SET'
             }
+            when {
+                expression { return params.USE_NETLIFY }
+            }
             steps{
                 sh '''
                     netlify --version
@@ -113,6 +116,9 @@ pipeline {
             }
             environment{
                 CI_ENVIRONMENT_URL = 'https://wondrous-otter-99403b.netlify.app'
+            }
+            when {
+                expression { return params.USE_NETLIFY }
             }
             steps{
                 sh '''
