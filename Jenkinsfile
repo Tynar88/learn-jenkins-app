@@ -21,14 +21,18 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'my-aws-S3', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                     sh '''
                     aws --version
-                    aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod.json
-                    aws ecs update-service --cluster LearnJenkinsMatt-Cluster-Prod --service LearnJenkinsMatt-Service-Prod --task-definition LearnJenkinsMatt-TaskDef-Prod:2
+                    yum install jq -y
+                    # yum ist ein Paketmanager --> RedHeat
+                    # jq für json
+                    LATEST_TD_REVISION = $(aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod.json | jq '.taskDefinition.revision')
+                    echo $LATEST_TD_REVISION
+                    aws ecs update-service --cluster LearnJenkinsMatt-Cluster-Prod --service LearnJenkinsMatt-Service-Prod --task-definition LearnJenkinsMatt-TaskDef-Prod:$LATEST_TD_REVISION
                     '''
                 }
             }
         }
 
-        
+        /*
         stage('Build') {
             agent {
                 docker {
@@ -50,6 +54,7 @@ pipeline {
 
             }
         }
+        */
     
     }
 }
