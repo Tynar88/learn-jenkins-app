@@ -41,6 +41,7 @@ pipeline {
             }
             steps{
                 sh '''
+                    yum -y install amazon-linux-extras
                     amazon-linux-extras install docker
                     docker build -f Dockerfile -t myjenkinsapp .
                 '''
@@ -53,9 +54,9 @@ pipeline {
         stage('Deploy to AWS') {
             agent {
                 docker {
-                    image "amazon/aws-cli"
-                    args "-u root --entrypoint=''"
+                    image 'amazon/aws-cli'
                     reuseNode true
+                    args "-u root -v /var/run/docker.sock:/var/run/docker.sock --entrypoint=''"
                 }
             }
             
