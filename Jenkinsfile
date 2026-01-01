@@ -24,11 +24,10 @@ pipeline {
                     yum install jq -y
                     # yum ist ein Paketmanager --> RedHeat
                     # jq für json
-                    echo 'Debug 1'
                     LATEST_TD_REVISION=$(aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod.json | jq -r '.taskDefinition.revision')
-                    echo $LATEST_TD_REVISION
-                    echo 'Debug 2'
+                    #echo $LATEST_TD_REVISION
                     aws ecs update-service --cluster LearnJenkinsMatt-Cluster-Prod --service LearnJenkinsMatt-Service-Prod --task-definition LearnJenkinsMatt-TaskDef-Prod:$LATEST_TD_REVISION
+                    aws ecs wait services-stable --cluster LearnJenkinsMatt-Cluster-Prod --services LearnJenkinsMatt-Service-Prod
                     '''
                 }
             }
