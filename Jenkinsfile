@@ -34,7 +34,7 @@ pipeline {
         stage('Build Docker Image') {
             agent {
                 docker {
-                    image "amazon/aws-cli"
+                    image "my-aws-cli"
                     args "-u root -v /var/run/docker.sock:/var/run/docker.sock --entrypoint=''"
                     reuseNode true
                 }
@@ -57,7 +57,7 @@ pipeline {
         stage('Deploy to AWS') {
             agent {
                 docker {
-                    image 'amazon/aws-cli'
+                    image 'my-aws-cli'
                     reuseNode true
                     args "-u root -v /var/run/docker.sock:/var/run/docker.sock --entrypoint=''"
                 }
@@ -69,7 +69,6 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'my-aws-S3', passwordVariable: 'AWS_SECRET_ACCESS_KEY', usernameVariable: 'AWS_ACCESS_KEY_ID')]) {
                     sh '''
                     aws --version
-                    yum install jq -y
                     # yum ist ein Paketmanager --> RedHeat
                     # jq für json
                     LATEST_TD_REVISION=$(aws ecs register-task-definition --cli-input-json file://aws/task-definition-prod.json | jq -r '.taskDefinition.revision')
