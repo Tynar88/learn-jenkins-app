@@ -41,9 +41,8 @@ pipeline {
             }
             steps{
                 sh '''
-                    sudo yum update -y
-                    sudo yum -y install docker
-                    sudo service docker start
+                    yum update -y
+                    yum -y install docker
 
                     #yum -y install amazon-linux-extras
                     #amazon-linux-extras install docker
